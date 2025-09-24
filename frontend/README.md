@@ -39,3 +39,16 @@ View all units (name, type, status)
 Filter by type or status
 Add new unit (status defaults to Available)
 Update status via dropdown (with backend validation)
+
+## Testing (curl examples)
+# Get all units
+curl.exe -X GET "http://localhost:5000/api/units"
+# Create unit
+curl.exe -X POST "http://localhost:5000/api/units" -H "Content-Type: application/json" -d "{\"name\":\"Capsule-A01\",\"type\":\"capsule\"}"
+# Update status
+curl.exe -X PUT "http://localhost:5000/api/units/1" -H "Content-Type: application/
+
+## Notes
+- SQLite is used for simplicity (easier local testing).
+- Prisma enums ensure type-safe status and type values.
+- Business rules are strictly enforced in backend API.

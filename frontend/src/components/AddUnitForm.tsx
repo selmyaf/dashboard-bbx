@@ -33,7 +33,7 @@ export default function AddUnitForm({ onAdded }: { onAdded: () => void }) {
         type="submit"
         className="px-4 py-2 rounded font-bold"
         style={{
-          backgroundColor: "#FFFFFF",   // bisa diganti #F3F4F6 atau #FED462
+          backgroundColor: "#FFFFFF",   
           color: "#FF8EC1",
           border: "2px solid #FF8EC1",
         }}

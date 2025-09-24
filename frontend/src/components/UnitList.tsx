@@ -9,21 +9,43 @@ type Unit = {
   lastUpdated: string;
 };
 
-export default function UnitList({ refresh }: { refresh: boolean }) {
+export default function UnitList({
+  refresh,
+  typeFilter,
+  statusFilter,
+}: {
+  refresh: boolean;
+  typeFilter: string;
+  statusFilter: string;
+}) {
   const [units, setUnits] = useState<Unit[]>([]);
-
   useEffect(() => {
-    api.get("/units").then(res => setUnits(res.data));
-  }, [refresh]);
+    const fetchUnits = async () => {
+      const params = new URLSearchParams();
+      if (typeFilter) params.append("type", typeFilter);
+      if (statusFilter) params.append("status", statusFilter);
+  
+      const res = await api.get(`/units?${params.toString()}`);
+      setUnits(res.data);
+    };
+  
+    fetchUnits();
+  }, [refresh, typeFilter, statusFilter]);
+  
 
   const updateStatus = async (id: number, status: string) => {
     try {
-      await api.put(`/units/${id}`, { status });
-      setUnits(units.map(u => (u.id === id ? { ...u, status } : u)));
+      const res = await api.put(`/units/${id}`, { status });
+      setUnits(units.map(u => (u.id === id ? res.data : u))); 
     } catch (err: any) {
-      alert(err.response.data.error);
+      if (err.response && err.response.data.error) {
+        alert(err.response.data.error); 
+      } else {
+        alert("Unexpected error occurred");
+      }
     }
   };
+  
 
   return (
     <table className="w-full border-collapse">

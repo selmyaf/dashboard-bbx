@@ -1,69 +1,41 @@
-# React + TypeScript + Vite
+# Bobobox Dashboard - Take Home Assignment
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+A full-stack application for managing Bobobox units (capsules and cabins).  
+Users can add new units, filter by type or status, and update statuses following specific business rules.
 
-Currently, two official plugins are available:
+## Tech Stack
+- Backend: Node.js (Express + TypeScript) + Prisma ORM + SQLite
+- Frontend: React (Vite + TypeScript) + TailwindCSS
+- Database: SQLite (`prisma/dev.db`)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Setup & Run
 
-## Expanding the ESLint configuration
+### 1. Backend
+cd backend
+npm install
+npx prisma migrate dev --name init
+npm run dev
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 2. Frontend
+cd frontend
+npm install
+npm run dev
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## API Endpoints
+- GET /api/units → list all units
+Optional query params: ?status=Available&type=capsule
+- GET /api/units/:id → get single unit
+- POST /api/units → create new unit ({ name, type })
+- PUT /api/units/:id → update status
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Business Logic
+❌ Cannot change Occupied → Available directly
+✅ Allowed: Occupied → Cleaning In Progress → Available
+✅ Allowed: Occupied → Maintenance Needed → Available
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Frontend Features
+View all units (name, type, status)
+Filter by type or status
+Add new unit (status defaults to Available)
+Update status via dropdown (with backend validation)
